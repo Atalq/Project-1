@@ -7,14 +7,14 @@ import random
 class DRONE:
     def __init__(self):
 
-        self.x = random.randint(0, 800)
-        self.y = random.randint(0, 600)
-        self.speed = 5
+        self.x = 200
+        self.y = 200
+        self.speed = 10
         self.pos = Vector2(self.x, self.y)
         self.direction = Vector2(1, 0)
 
     def move_drone(self):
-        
+    
         self.pos = Vector2(self.pos.x + self.speed * self.direction.x, self.pos.y + self.speed * self.direction.y)
 
 
@@ -64,10 +64,24 @@ def main():
 
             if event.type == SCREEN_UPDATE:
                 drone.move_drone()
+                
 
-            
+            key =  pygame.key.get_pressed()
+
+            if key[pygame.K_RIGHT]:
+                drone.direction = Vector2(1, 0)
+            if key[pygame.K_LEFT]:
+                drone.direction = Vector2(-1, 0)
+            if key[pygame.K_UP]:
+                drone.direction = Vector2(0, -1)
+            if key[pygame.K_DOWN]:
+                drone.direction = Vector2(0, 1)
+            if key[pygame.K_SPACE]:
+                drone.pos.x = 200
+                drone.pos.y = 200
         
-        
+
+
         screen.fill(WHITE)
         screen.blit(text, (300, 30))
         drone.draw_drone(screen)
