@@ -1,8 +1,34 @@
 import pygame
 import sys
+from pygame.math import Vector2
+import random
+
+
+class DRONE:
+    def __init__(self):
+
+        self.x = random.randint(0, 800)
+        self.y = random.randint(0, 600)
+        self.speed = 1
+        self.pos = Vector2(self.x, self.y)
+        self.direction = (1, 0)
+
+    def update():
+        pass
+
+
+
+    def draw_drone(self, screen):
+        drone_rect = pygame.Rect(int(self.pos.x), int(self.pos.y), 10, 15)
+        pygame.draw.rect(screen, BLACK, drone_rect)
+        
+
+
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+
+drone = DRONE()
 
 def main():
         # Set up pygame and screen  
@@ -18,31 +44,23 @@ def main():
     clock = pygame.time.Clock()
 
     running = True 
-    #Initial x, y and the velocity
-    x, y = 100, 100
-    vel = 10
-
     while running:
+        
         for event in pygame.event.get():
             # To close program when X pressed
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+                sys.exit()
             # Key combinations and movement correlation
             key =  pygame.key.get_pressed()
-            if key[pygame.K_LEFT] and x > 0:
-                x -= vel
-            if key[pygame.K_RIGHT] and x < 800-10:
-                x += vel
-            if key[pygame.K_UP] and y > 0:
-                y -= vel
-            if key[pygame.K_DOWN] and y < 600-15:
-                y += vel
-
+            
+        
+        
         screen.fill(WHITE)
         screen.blit(text, (300, 30))
-        pygame.draw.rect(screen, BLACK, [x, y, 10, 15])
+        drone.draw_drone(screen)
         pygame.display.flip()
-        clock.tick(30)
+        clock.tick(60)
    
     
     pygame.quit()
