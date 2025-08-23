@@ -9,13 +9,13 @@ class Drone:
 
         self.x = 200
         self.y = 200
-        self.speed = 10
+        self.speed = 150
         self.pos = Vector2(self.x, self.y)
         self.direction = Vector2(1, 0)
           
-    def move_drone(self):
+    def move_drone(self, dt):
     
-        self.pos = Vector2(self.pos.x + self.speed * self.direction.x, self.pos.y + self.speed * self.direction.y)
+        self.pos += self.direction * self.speed * dt 
 
 
     def draw_drone(self, screen):
@@ -106,9 +106,7 @@ def main():
     clock = pygame.time.Clock()
 
         # Timer for the detection and implementation of the movement fo the drone 
-    SCREEN_UPDATE = pygame.USEREVENT
-    pygame.time.set_timer(SCREEN_UPDATE, 80)
-
+    
 
     running = True 
     while running:
@@ -119,9 +117,9 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-            # Initiate drone Movement
-            if event.type == SCREEN_UPDATE:
-                drone.move_drone()
+            
+            
+            
                 
 
             
@@ -138,29 +136,31 @@ def main():
             if key[pygame.K_SPACE]:
                 drone.pos.x = 200
                 drone.pos.y = 200
-                drone.speed = 10
+                drone.speed = 150
                 drone.direction = Vector2(0, 0)
             if key[pygame.K_w]:
-                drone.speed += 1
+                drone.speed += 10
             if key[pygame.K_s]:
-                drone.speed -= 1
+                drone.speed -= 10
 
             # Edge (boundry) conditions
-            if drone.pos.x >= SCREEN_WIDTH-10:
-                drone.direction = Vector2(-1, 0)
-            elif drone.pos.x <= 0:
-                drone.direction = Vector2(1, 0)
-            if drone.pos.y >= SCREEN_HEIGHT-10:
-                drone.direction = Vector2(0, -1)
-            elif drone.pos.y <= 0:
-                drone.direction = Vector2(0, 1)
+        if drone.pos.x >= SCREEN_WIDTH-10:
+            drone.direction = Vector2(-1, 0)
+        elif drone.pos.x <= 0:
+            drone.direction = Vector2(1, 0)
+        if drone.pos.y >= SCREEN_HEIGHT - 50:
+            drone.direction = Vector2(0, -1)
+        elif drone.pos.y <= 0:
+            drone.direction = Vector2(0, 1)
 
             # Collisions 
+        dt = clock.tick(60)/ 1000
+        drone.move_drone(dt)   
 
-            drone_rect = pygame.Rect(int(drone.pos.x), int(drone.pos.y), DRONE_SIZE, DRONE_SIZE)
-            hit_index = drone_rect.collidelist(obs1.get_rects())
-            if hit_index != -1:
-                drone.speed = 0
+        drone_rect = pygame.Rect(int(drone.pos.x), int(drone.pos.y), DRONE_SIZE, DRONE_SIZE)
+        hit_index = drone_rect.collidelist(obs1.get_rects())
+        if hit_index != -1:
+            drone.speed = 0
                 
             
 
@@ -174,7 +174,7 @@ def main():
         screen.blit(text_speed, (600, 40))
         drone.draw_drone(screen)
         obs1.draw_obss(screen)
-        # Header code :::: pygame.draw.line(screen, (0,255,0), (drone.pos.x + 5, drone.pos.y + 5), (drone.pos.x + 5, drone.pos.y + 5) + drone.direction * 100)
+        pygame.draw.line(screen, (0,255,0), (drone.pos.x + 5, drone.pos.y + 5), (drone.pos.x + 5, drone.pos.y + 5) + drone.direction * 100)
         pygame.display.flip()
         clock.tick(60)
    
