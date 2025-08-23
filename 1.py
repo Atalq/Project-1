@@ -21,10 +21,24 @@ class Drone:
     def draw_drone(self, screen):
         drone_rect = pygame.Rect(int(self.pos.x), int(self.pos.y), DRONE_SIZE, DRONE_SIZE)
         pygame.draw.rect(screen, BLACK, drone_rect)
-        
+
+
+class Obstacles:
+    def __init__(self):
+        self.x = random.randint(50, 750)
+        self.y = random.randint(50, 550)
+        self.pos = Vector2(self.x, self.y)
+        self.w = random.randint(15,50)
+        self.h = random.randint(15,50)
+
+    def draw_obs(self, screen):
+        obs_rect = pygame.Rect(int(self.pos.x), int(self.pos.y), self.w, self.h)
+        pygame.draw.rect(screen, RED, obs_rect)
+
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+RED = (255, 0, 0)
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 DRONE_SIZE = 10
@@ -35,6 +49,7 @@ def main():
 
     # drone object creation
     drone = Drone()
+    obs1 = Obstacles()
 
         # Screen set up
     screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -107,6 +122,7 @@ def main():
         screen.blit(text, (300, 30))
         screen.blit(text_speed, (600, 40))
         drone.draw_drone(screen)
+        obs1.draw_obs(screen)
         # Header code :::: pygame.draw.line(screen, (255,0,0), (drone.pos.x + 5, drone.pos.y + 5), (drone.pos.x + 5, drone.pos.y + 5) + drone.direction * 15)
         pygame.display.flip()
         clock.tick(60)
