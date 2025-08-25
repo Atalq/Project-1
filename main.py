@@ -1,91 +1,7 @@
-import pygame
-import sys
+import sys, pygame
 from pygame.math import Vector2
-import random
+from sim import Drone, Obstacles, SCREEN_WIDTH, SCREEN_HEIGHT, DRONE_SIZE, COLOURS
 
-
-class Drone:
-    def __init__(self):
-
-        self.x = 200
-        self.y = 200
-        self.speed = 150
-        self.pos = Vector2(self.x, self.y)
-        self.direction = Vector2(1, 0)
-          
-    def move_drone(self, dt):
-    
-        self.pos += self.direction * self.speed * dt 
-
-
-    def draw_drone(self, screen):
-        drone_Rect = pygame.Rect(int(self.pos.x), int(self.pos.y), DRONE_SIZE, DRONE_SIZE)
-        pygame.draw.rect(screen, BLACK, drone_Rect)
-
-class Obstacle:
-
-    def __init__(self, x, y, w, h):
-        self.pos = Vector2(x, y)
-        self.w = int(w)
-        self.h = int(h)
-        self.colour = RED
-        self.Rect = pygame.Rect(int(self.pos.x), int(self.pos.y), self.w, self.h)
-
-    def draw_obstacle(self, screen):
-        pygame.draw.rect(screen, self.colour, self.Rect)
-        
-class Obstacles:
-
-    def __init__(self,n, seed=None):
-        
-        if seed != None:
-            random.seed(seed)
-        self.colour  = RED
-        self.screen_w = SCREEN_WIDTH
-        self.screen_h = SCREEN_HEIGHT
-        self.margin = 50
-        self.min_size = 15
-        self.max_size = 50
-
-
-        self.obsl = []
-        self.Rects = []
-        self._generate(n)
-
-    def _generate(self, n):
-        self.obsl.clear()
-        self.Rects.clear()
-
-        for i in range(n):
-            w = random.randint(self.min_size, self.max_size)
-            h = random.randint(self.min_size, self.max_size)
-            x = random.randint(self.margin, self.screen_w - self.margin - w)
-            y = random.randint(self.margin, self.screen_h - self.margin - h)
-
-            ob = Obstacle(x, y, w, h)
-            self.obsl.append(ob)
-            self.Rects.append(ob.Rect)
-        
-
-    def regenerate(self, n):
-        self._generate(n)
-
-
-    def draw_obss(self, screen):
-        for obstacle in self.obsl:
-            obstacle.draw_obstacle(screen)
-
-    def get_rects(self):
-        return self.Rects
-        
-
-
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 800
-DRONE_SIZE = 10
 
 def main():
         # Set up pygame 
@@ -102,7 +18,7 @@ def main():
         # set up font 
     font1 = pygame.font.SysFont('Calibri', 30, True, False)
     font2 = pygame.font.SysFont('Calibri', 18, True, False)
-    text = font1.render("Drone sim test", True, BLACK)
+    text = font1.render("Drone sim test", True, COLOURS["BLACK"])
     
 
         # Clock
@@ -170,14 +86,14 @@ def main():
 
 
 
-        text_speed = font2.render(f"Speed: {drone.speed}", True, BLACK)
+        text_speed = font2.render(f"Speed: {drone.speed}", True, COLOURS["BLACK"])
         # Screen initiation and update
         screen.fill(WHITE)
         screen.blit(text, (300, 30))
         screen.blit(text_speed, (600, 40))
         drone.draw_drone(screen)
         obs1.draw_obss(screen)
-        pygame.draw.line(screen, (0,255,0), (drone.pos.x + 5, drone.pos.y + 5), (drone.pos.x + 5, drone.pos.y + 5) + drone.direction * 100)
+        pygame.draw.line(screen, COLOURS["GREEN"], (drone.pos.x + 5, drone.pos.y + 5), (drone.pos.x + 5, drone.pos.y + 5) + drone.direction * 100)
         pygame.display.flip()
         clock.tick(60)
    
