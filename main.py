@@ -35,32 +35,26 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
-            
-            
-            
-                
-
             
             # Key Combinations for each mechanic
-            key =  pygame.key.get_pressed()
-            if key[pygame.K_RIGHT]:
-                drone.direction = Vector2(1, 0)
-            if key[pygame.K_LEFT]:
-                drone.direction = Vector2(-1, 0)
-            if key[pygame.K_UP]:
-                drone.direction = Vector2(0, -1)
-            if key[pygame.K_DOWN]:
-                drone.direction = Vector2(0, 1)
-            if key[pygame.K_SPACE]:
-                drone.pos.x = 200
-                drone.pos.y = 200
-                drone.speed = 150
-                drone.direction = Vector2(0, 0)
-            if key[pygame.K_w]:
-                drone.speed += 10
-            if key[pygame.K_s]:
-                drone.speed -= 10
+        key =  pygame.key.get_pressed()
+        if key[pygame.K_RIGHT]:
+            drone.direction = Vector2(1, 0)
+        if key[pygame.K_LEFT]:
+            drone.direction = Vector2(-1, 0)
+        if key[pygame.K_UP]:
+            drone.direction = Vector2(0, -1)
+        if key[pygame.K_DOWN]:
+            drone.direction = Vector2(0, 1)
+        if key[pygame.K_SPACE]:
+            drone.pos.x = 200
+            drone.pos.y = 200
+            drone.speed = 150
+            drone.direction = Vector2(0, 0)
+        if key[pygame.K_w]:
+            drone.speed += 10
+        if key[pygame.K_s]:
+            drone.speed -= 10
 
             # Edge (boundry) conditions
         if drone.pos.x >= SCREEN_WIDTH-10:
