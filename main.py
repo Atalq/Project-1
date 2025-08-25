@@ -88,7 +88,7 @@ def main():
 
         text_speed = font2.render(f"Speed: {drone.speed}", True, COLOURS["BLACK"])
         # Screen initiation and update
-        screen.fill(WHITE)
+        screen.fill(COLOURS["WHITE"])
         screen.blit(text, (300, 30))
         screen.blit(text_speed, (600, 40))
         drone.draw_drone(screen)
