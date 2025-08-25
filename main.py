@@ -67,6 +67,9 @@ class Obstacles:
             self.Rects.append(ob.Rect)
         
 
+    def regenerate(self, n):
+        self._generate(n)
+
 
     def draw_obss(self, screen):
         for obstacle in self.obsl:
@@ -148,7 +151,7 @@ def main():
             drone.direction = Vector2(-1, 0)
         elif drone.pos.x <= 0:
             drone.direction = Vector2(1, 0)
-        if drone.pos.y >= SCREEN_HEIGHT - 50:
+        if drone.pos.y >= SCREEN_HEIGHT - 10:
             drone.direction = Vector2(0, -1)
         elif drone.pos.y <= 0:
             drone.direction = Vector2(0, 1)
