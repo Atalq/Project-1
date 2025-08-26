@@ -55,6 +55,9 @@ def main():
             drone.speed += 10
         if key[pygame.K_s]:
             drone.speed -= 10
+        if key[pygame.K_r]:
+            obs1.regenerate(10)
+        
 
             # Edge (boundry) conditions
         if drone.pos.x >= SCREEN_WIDTH-10:
@@ -83,7 +86,7 @@ def main():
         text_speed = font2.render(f"Speed: {drone.speed}", True, COLOURS["BLACK"])
         # Screen initiation and update
         screen.fill(COLOURS["WHITE"])
-        screen.blit(text, (300, 30))
+        screen.blit(text, (400, 30))
         screen.blit(text_speed, (600, 40))
         drone.draw_drone(screen)
         obs1.draw_obss(screen)
