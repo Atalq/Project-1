@@ -5,5 +5,7 @@ from pygame.math import Vector2
 
 def normalise(v):
     tots = v.x**2 + v.y**2
+    if tots == 0:
+        return v
     normalised_vector = v / math.sqrt(tots)
     return normalised_vector

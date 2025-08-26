@@ -88,7 +88,7 @@ def main():
         drone.draw_drone(screen)
         obs1.draw_obss(screen)
         # HEADER: pygame.draw.line(screen, COLOURS["GREEN"], (drone.pos.x + 5, drone.pos.y + 5), (drone.pos.x + 5, drone.pos.y + 5) + drone.direction * 100)
-        drone.generate_sensors(6, screen)
+        drone.generate_sensors(12, screen)
         pygame.display.flip()
         clock.tick(60)
    
