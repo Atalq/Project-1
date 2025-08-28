@@ -51,7 +51,7 @@ class Drone:
                 hit_end = obstacle.clipline(i[0], i[1])
                 if hit_end:
                     start, end = hit_end
-                    pygame.draw.line(screen, COLOURS["BLUE"], start, end)
+                    pygame.draw.line(screen, COLOURS["BLUE"], start, i[1],3)
 
         
 
