@@ -1,8 +1,9 @@
 import pygame
 from pygame.math import Vector2
 import numpy as np
+import math
 from .config import DRONE_SIZE, COLOURS, SENSOR_FOV, SENSOR_LENGHT, SENSOR_COUNT
-from .utils import normalise
+from .utils import normalise, distance
 
 
 
@@ -45,17 +46,28 @@ class Drone:
             pygame.draw.line(screen, COLOURS["GREEN"], i[0], i[1])
     
     def sens_dist(self,screen,obstacles):
+      
         
         for i in self.sens_start_end:
+            nearest_d = SENSOR_LENGHT
+            nearest_hit = None
             for obstacle in obstacles:
-                hit_end = obstacle.clipline(i[0], i[1])
-                if hit_end:
-                    start, end = hit_end
-                    pygame.draw.line(screen, COLOURS["BLUE"], start, i[1],3)
+                hit = obstacle.clipline(i[0], i[1])
+
+                if hit:
+                    clipped_start, clipped_end = hit
+                    dist = distance(clipped_start, i[0])
+                    if dist < nearest_d:
+                        nearest_d = dist
+                        nearest_hit = clipped_start
+            self.sensor_distance = []
+            if nearest_hit:
+                pygame.draw.line(screen, COLOURS["BLUE"], nearest_hit, i[1], 3)
+                self.sensor_distance.append(nearest_d)
+            else:
+                self.sensor_distance.append(SENSOR_LENGHT)
 
         
-
-            
 
 
 
