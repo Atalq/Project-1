@@ -40,12 +40,9 @@ class Drone:
             ray_direction = normalised_direction.rotate(angle)
             endpoint = d_center + ray_direction * SENSOR_LENGHT
             self.sens_start_end.append((d_center, endpoint))
-
-    def draw_sensors(self, screen):
-        for i in self.sens_start_end:
-            pygame.draw.line(screen, COLOURS["GREEN"], i[0], i[1])
     
-    def sens_dist(self,screen,obstacles):
+    
+    def sensors(self,screen,obstacles):
       
         
         for i in self.sens_start_end:
@@ -62,9 +59,11 @@ class Drone:
                         nearest_hit = clipped_start
             self.sensor_distance = []
             if nearest_hit:
+                pygame.draw.line(screen, COLOURS["GREEN"], i[0], nearest_hit, 1)
                 pygame.draw.line(screen, COLOURS["BLUE"], nearest_hit, i[1], 3)
                 self.sensor_distance.append(nearest_d)
             else:
+                pygame.draw.line(screen, COLOURS["GREEN"], i[0], i[1])
                 self.sensor_distance.append(SENSOR_LENGHT)
 
         
