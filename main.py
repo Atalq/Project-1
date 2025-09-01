@@ -1,6 +1,6 @@
 import sys, pygame
 from pygame.math import Vector2
-from sim import Drone, Obstacles, SCREEN_WIDTH, SCREEN_HEIGHT, DRONE_SIZE, COLOURS, SENSOR_COUNT
+from sim import Drone, Obstacles, SCREEN_WIDTH, SCREEN_HEIGHT, DRONE_SIZE, COLOURS, SENSOR_COUNT, OBSTACLE_COUNT
 
 
 def main():
@@ -9,7 +9,7 @@ def main():
 
     # drone object creation
     drone = Drone()
-    obs1 = Obstacles(10)
+    obs1 = Obstacles(OBSTACLE_COUNT)
 
         # Screen set up
     screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)

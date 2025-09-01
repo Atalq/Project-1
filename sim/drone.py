@@ -73,6 +73,7 @@ class Drone:
         elif index > (SENSOR_COUNT/2) and smallest_distance < 0.75 * SENSOR_LENGHT:
             self.direction = self.direction.rotate(-5 * self.speed/150)
         
+        
 
 
 
