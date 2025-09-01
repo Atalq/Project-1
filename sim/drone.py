@@ -2,7 +2,7 @@ import pygame
 from pygame.math import Vector2
 import numpy as np
 import math
-from .config import DRONE_SIZE, COLOURS, SENSOR_FOV, SENSOR_LENGHT, SENSOR_COUNT
+from .config import DRONE_SIZE, COLOURS, SENSOR_FOV, SENSOR_LENGHT, SENSOR_COUNT, TURN_RATE_DEG_PER_SEC, SCREEN_WIDTH, SCREEN_HEIGHT
 from .utils import normalise, distance
 
 
@@ -22,14 +22,18 @@ class Drone:
     
         self.pos += self.direction * self.speed * dt 
 
-    def get_Rect(self):
+    def header(self, screen, f):
+        pygame.draw.line(screen, COLOURS["RED"], self.pos + Vector2(5,5), self.pos + Vector2(5,5) + self.direction * 100* f)
+
+    def _get_Rect(self):
         return pygame.Rect(int(self.pos.x), int(self.pos.y), DRONE_SIZE, DRONE_SIZE)
 
     def draw_drone(self, screen):
         drone_Rect = pygame.Rect(int(self.pos.x), int(self.pos.y), DRONE_SIZE, DRONE_SIZE)
         pygame.draw.rect(screen, COLOURS["BLACK"], drone_Rect)
 
-    def generate_sensors(self,n):
+    def sensors(self,screen,n, obstacles):
+        # Generates sensors
         angles = [(-SENSOR_FOV)/2 + i * (SENSOR_FOV/(n-1)) for i in range(n)
                   ]
         d_center = Vector2(self.pos + (DRONE_SIZE/2, DRONE_SIZE/2))
@@ -41,8 +45,8 @@ class Drone:
             ray_direction = normalised_direction.rotate(angle)
             endpoint = d_center + ray_direction * SENSOR_LENGHT
             self.sens_start_end.append((d_center, endpoint))
-
-    def sensors(self,screen,obstacles):
+        
+        # Manages what the sensors so during a collision with a Rect
         self.sensor_distance = []
         for i in self.sens_start_end:
             nearest_d = SENSOR_LENGHT
@@ -65,16 +69,58 @@ class Drone:
                 pygame.draw.line(screen, COLOURS["GREEN"], i[0], i[1])
                 self.sensor_distance.append(SENSOR_LENGHT)
 
-    def avoid(self):
+    def avoid(self, dt):
         smallest_distance, index = min((dist, idx) for idx, dist in enumerate(self.sensor_distance))
+        turn_deg =  TURN_RATE_DEG_PER_SEC * dt
+        gain = max(0, 1- smallest_distance / (0.75 * SENSOR_LENGHT))
+        turn_deg *= gain
 
         if index < (SENSOR_COUNT/2) and smallest_distance < 0.75 * SENSOR_LENGHT:
-            self.direction = self.direction.rotate(+5 * self.speed/150)
+            self.direction = self.direction.rotate(1 * turn_deg)
         elif index > (SENSOR_COUNT/2) and smallest_distance < 0.75 * SENSOR_LENGHT:
-            self.direction = self.direction.rotate(-5 * self.speed/150)
+            self.direction = self.direction.rotate(-1 * turn_deg)
+        elif index == SENSOR_COUNT/2 and smallest_distance < 0.5 * SENSOR_LENGHT:
+            self.direction = self.direction.rotate(+15)
+        elif index < (SENSOR_COUNT/2) or index > (SENSOR_COUNT/2) and smallest_distance > 0.85 * SENSOR_LENGHT:
+            self.direction = normalise(self.direction)
         
+    def mechanics(self, obstacles = None):
+        key =  pygame.key.get_pressed()
+        if key[pygame.K_RIGHT]:
+            self.direction = Vector2(1, 0)
+        if key[pygame.K_LEFT]:
+            self.direction = Vector2(-1, 0)
+        if key[pygame.K_UP]:
+            self.direction = Vector2(0, -1)
+        if key[pygame.K_DOWN]:
+            self.direction = Vector2(0, 1)
+        if key[pygame.K_SPACE]:
+            self.pos.x = 200
+            self.pos.y = 200
+            self.speed = 150
+            self.direction = Vector2(0, 0)
+        if key[pygame.K_w]:
+            self.speed += 10
+        if key[pygame.K_s]:
+            self.speed -= 10
         
+        # Boundry Conditions
+        if self.pos.x >= SCREEN_WIDTH-10:
+            self.direction = self.direction.rotate(180)
+        elif self.pos.x <= 0:
+            self.direction = self.direction.rotate(180)
+        if self.pos.y >= SCREEN_HEIGHT - 10:
+            self.direction = self.direction.rotate(180)
+        elif self.pos.y <= 0:
+            self.direction = self.direction.rotate(180)
 
+        # Collision
+        if obstacles:
+            rects = self._get_Rect()
+            hit_index = rects.collidelist(obstacles)
+            if hit_index != -1:
+                self.speed = 0
+        
 
 
     
