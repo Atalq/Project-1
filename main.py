@@ -56,7 +56,7 @@ def main():
         if key[pygame.K_s]:
             drone.speed -= 10
         if key[pygame.K_r]:
-            obs1.regenerate(10)
+            obs1.regenerate(OBSTACLE_COUNT)
         
 
             # Edge (boundry) conditions

@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-from .config import SCREEN_HEIGHT,SCREEN_WIDTH, COLOURS
+from .config import SCREEN_HEIGHT,SCREEN_WIDTH, COLOURS, OBSTACLE_MAX_SIZE, OBSTACLE_MIN_SIZE
 import random
 
 
@@ -29,9 +29,9 @@ class Obstacles:
         self.colour  = COLOURS["RED"]
         self.screen_w = SCREEN_WIDTH
         self.screen_h = SCREEN_HEIGHT
-        self.margin = 50
-        self.min_size = 15
-        self.max_size = 50
+        self.margin = OBSTACLE_MAX_SIZE
+        self.min_size = OBSTACLE_MIN_SIZE
+        self.max_size = OBSTACLE_MAX_SIZE
 
 
         self.obsl = []
