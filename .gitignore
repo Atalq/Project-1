@@ -9,3 +9,4 @@ sim/__pycache__/config.cpython-311.pyc
 sim/__pycache__/drone.cpython-311.pyc
 sim/__pycache__/obstacles.cpython-311.pyc
 sim/__pycache__/utils.cpython-311.pyc
+sim/__pycache__/maze.cpython-313.pyc
