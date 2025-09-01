@@ -8,6 +8,7 @@ from .utils import normalise, distance
 
 
 class Drone:
+
     def __init__(self):
 
         self.x = 200
@@ -40,11 +41,9 @@ class Drone:
             ray_direction = normalised_direction.rotate(angle)
             endpoint = d_center + ray_direction * SENSOR_LENGHT
             self.sens_start_end.append((d_center, endpoint))
-    
-    
+
     def sensors(self,screen,obstacles):
-      
-        
+        self.sensor_distance = []
         for i in self.sens_start_end:
             nearest_d = SENSOR_LENGHT
             nearest_hit = None
@@ -57,7 +56,7 @@ class Drone:
                     if dist < nearest_d:
                         nearest_d = dist
                         nearest_hit = clipped_start
-            self.sensor_distance = []
+            
             if nearest_hit:
                 pygame.draw.line(screen, COLOURS["GREEN"], i[0], nearest_hit, 1)
                 pygame.draw.line(screen, COLOURS["BLUE"], nearest_hit, i[1], 3)
@@ -66,6 +65,13 @@ class Drone:
                 pygame.draw.line(screen, COLOURS["GREEN"], i[0], i[1])
                 self.sensor_distance.append(SENSOR_LENGHT)
 
+    def avoid(self):
+        smallest_distance, index = min((dist, idx) for idx, dist in enumerate(self.sensor_distance))
+
+        if index < (SENSOR_COUNT/2) and smallest_distance < 0.75 * SENSOR_LENGHT:
+            self.direction = self.direction.rotate(+5 * self.speed/150)
+        elif index > (SENSOR_COUNT/2) and smallest_distance < 0.75 * SENSOR_LENGHT:
+            self.direction = self.direction.rotate(-5 * self.speed/150)
         
 
 

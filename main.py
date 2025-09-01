@@ -61,13 +61,13 @@ def main():
 
             # Edge (boundry) conditions
         if drone.pos.x >= SCREEN_WIDTH-10:
-            drone.direction = Vector2(-1, 0)
+            drone.direction = drone.direction.rotate(180)
         elif drone.pos.x <= 0:
-            drone.direction = Vector2(1, 0)
+            drone.direction = drone.direction.rotate(180)
         if drone.pos.y >= SCREEN_HEIGHT - 10:
-            drone.direction = Vector2(0, -1)
+            drone.direction = drone.direction.rotate(180)
         elif drone.pos.y <= 0:
-            drone.direction = Vector2(0, 1)
+            drone.direction = drone.direction.rotate(180)
 
             # Collisions 
         dt = clock.tick(60)/ 1000
@@ -91,6 +91,7 @@ def main():
         # HEADER: pygame.draw.line(screen, COLOURS["GREEN"], (drone.pos.x + 5, drone.pos.y + 5), (drone.pos.x + 5, drone.pos.y + 5) + drone.direction * 100)
         drone.generate_sensors(SENSOR_COUNT)
         drone.sensors(screen, obs1.Rects)
+        drone.avoid()
         pygame.display.flip()
         clock.tick(60)
    
