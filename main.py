@@ -56,7 +56,6 @@ def main():
         screen.blit(text_speed, (600, 40))
         drone.draw_drone(screen)
         obs1.draw_obss(screen)
-        # Header :::: drone.header(screen, 3)
         drone.sensors(screen, SENSOR_COUNT, obs1.Rects)
         drone.avoid(dt)
         pygame.display.flip()

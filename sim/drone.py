@@ -22,15 +22,15 @@ class Drone:
     
         self.pos += self.direction * self.speed * dt 
 
-    def header(self, screen, f):
-        pygame.draw.line(screen, COLOURS["RED"], self.pos + Vector2(5,5), self.pos + Vector2(5,5) + self.direction * 100* f)
-
     def _get_Rect(self):
         return pygame.Rect(int(self.pos.x), int(self.pos.y), DRONE_SIZE, DRONE_SIZE)
 
-    def draw_drone(self, screen):
+    def draw_drone(self, screen, H = False):
         drone_Rect = pygame.Rect(int(self.pos.x), int(self.pos.y), DRONE_SIZE, DRONE_SIZE)
         pygame.draw.rect(screen, COLOURS["BLACK"], drone_Rect)
+
+        if H:
+            pygame.draw.line(screen, COLOURS["RED"], self.pos + Vector2(5,5), self.pos + Vector2(5,5) + self.direction * 200)
 
     def sensors(self,screen,n, obstacles):
         # Generates sensors
