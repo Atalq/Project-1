@@ -1,6 +1,6 @@
 import sys, pygame
 from pygame.math import Vector2
-from sim import Drone, Obstacles, SCREEN_WIDTH, SCREEN_HEIGHT, DRONE_SIZE, COLOURS
+from sim import Drone, Obstacles, SCREEN_WIDTH, SCREEN_HEIGHT, DRONE_SIZE, COLOURS, SENSOR_COUNT
 
 
 def main():
@@ -81,8 +81,6 @@ def main():
             
 
 
-
-
         text_speed = font2.render(f"Speed: {drone.speed}", True, COLOURS["BLACK"])
         # Screen initiation and update
         screen.fill(COLOURS["WHITE"])
@@ -91,7 +89,7 @@ def main():
         drone.draw_drone(screen)
         obs1.draw_obss(screen)
         # HEADER: pygame.draw.line(screen, COLOURS["GREEN"], (drone.pos.x + 5, drone.pos.y + 5), (drone.pos.x + 5, drone.pos.y + 5) + drone.direction * 100)
-        drone.generate_sensors(20)
+        drone.generate_sensors(SENSOR_COUNT)
         drone.sensors(screen, obs1.Rects)
         pygame.display.flip()
         clock.tick(60)
