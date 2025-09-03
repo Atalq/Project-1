@@ -18,3 +18,8 @@ def distance(p1, p2):
     dist =  math.sqrt(raw_dist_x + raw_dist_y)
 
     return dist
+
+
+def centered_list(n):
+    half = n//2
+    return list(range(half, -half - 1, -1))

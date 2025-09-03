@@ -2,8 +2,8 @@ import pygame
 from pygame.math import Vector2
 import numpy as np
 import math
-from .config import DRONE_SIZE, COLOURS, SENSOR_FOV, SENSOR_LENGHT, SENSOR_COUNT, TURN_RATE_DEG_PER_SEC, SCREEN_WIDTH, SCREEN_HEIGHT
-from .utils import normalise, distance
+from .config import DRONE_SIZE, COLOURS, SENSOR_FOV, SENSOR_LENGHT, SENSOR_COUNT, TURN_RATE_DEG_PER_SEC, SCREEN_WIDTH, SCREEN_HEIGHT, INFLUENCE_FACTOR, BASE_SPEED
+from .utils import normalise, distance, centered_list
 
 
 
@@ -13,7 +13,7 @@ class Drone:
 
         self.x = 200
         self.y = 200
-        self.speed = float(150)
+        self.speed = float(BASE_SPEED)
         self.pos = Vector2(self.x, self.y)
         self.direction = Vector2(1, 0)
         self.sensor_list = []
@@ -71,19 +71,24 @@ class Drone:
 
     def avoid(self, dt):
         smallest_distance, index = min((dist, idx) for idx, dist in enumerate(self.sensor_distance))
-        turn_deg =  TURN_RATE_DEG_PER_SEC * dt
-        gain = max(0, 1- smallest_distance / (0.75 * SENSOR_LENGHT))
-        turn_deg *= gain
+        weighted_list = centered_list(SENSOR_COUNT)
+        influence_list = [((SENSOR_LENGHT - nearestd) / SENSOR_LENGHT)**INFLUENCE_FACTOR for nearestd in self.sensor_distance]
+        steering = 0
 
-        if index < (SENSOR_COUNT/2) and smallest_distance < 0.75 * SENSOR_LENGHT:
-            self.direction = self.direction.rotate(1 * turn_deg)
-        elif index > (SENSOR_COUNT/2) and smallest_distance < 0.75 * SENSOR_LENGHT:
-            self.direction = self.direction.rotate(-1 * turn_deg)
-        elif index == SENSOR_COUNT/2 and smallest_distance < 0.5 * SENSOR_LENGHT:
-            self.direction = self.direction.rotate(+15)
-        elif index < (SENSOR_COUNT/2) or index > (SENSOR_COUNT/2) and smallest_distance > 0.85 * SENSOR_LENGHT:
-            self.direction = normalise(self.direction)
+        if smallest_distance < 0.15 ** SENSOR_LENGHT:
+            self.direction = self.direction.rotate(60)
+
+        else:
+
+            for i in range(len(influence_list)):
+                steering += weighted_list[i] * influence_list[i]
+                
+            turn_deg = steering * TURN_RATE_DEG_PER_SEC * dt / 10
+            self.direction = self.direction.rotate(turn_deg)
+
         
+
+
     def mechanics(self, obstacles = None):
         key =  pygame.key.get_pressed()
         if key[pygame.K_RIGHT]:
@@ -97,7 +102,7 @@ class Drone:
         if key[pygame.K_SPACE]:
             self.pos.x = 200
             self.pos.y = 200
-            self.speed = 150
+            self.speed = BASE_SPEED
             self.direction = Vector2(0, 0)
         if key[pygame.K_w]:
             self.speed += 10
